@@ -11,7 +11,7 @@
     <artifactId>homework_03</artifactId>
     <packaging>jar</packaging>
 
-    <name>homework03</name>
+    <name>homework_03</name>
     <url>http://maven.apache.org</url>
 
     <properties>
