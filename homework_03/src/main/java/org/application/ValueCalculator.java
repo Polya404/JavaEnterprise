@@ -9,26 +9,33 @@ public class ValueCalculator {
     private final int ARRAY_SIZE = array.length;
     private int numOfThreads = 1;
 
-
     public void setNumOfThreads(int numOfThreads) {
         this.numOfThreads = numOfThreads;
     }
 
-    public void operationsWithMultipleThreads() {
+    public void operationsWithMainThread() {
+        long start = System.currentTimeMillis();
+        Arrays.fill(array, 1f);
+        task(0, ARRAY_SIZE);
+        long end = System.currentTimeMillis();
+        System.out.println("With main threads: " + (end - start));
+    }
+
+    public void operationsWithMultiplyThreads() {
         long start = System.currentTimeMillis();
         Arrays.fill(array, 1f);
         int segmentSize = ARRAY_SIZE / numOfThreads;
         for (int i = 0; i < numOfThreads; i++) {
             int startIndex = i * segmentSize;
             int endIndex = (i == numOfThreads - 1) ? ARRAY_SIZE : (i + 1) * segmentSize;
-            Float[] subArray = Arrays.copyOfRange(array, startIndex, endIndex);
-            new Thread(() -> task(subArray, startIndex)).start();
+            new Thread(() -> task(startIndex, endIndex)).start();
         }
         long end = System.currentTimeMillis();
         System.out.println("With " + numOfThreads + " threads: " + (end - start));
     }
 
-    private void task(Float[] subArray, int startIndex) {
+    private void task(int startIndex, int endIndex) {
+        Float[] subArray = Arrays.copyOfRange(array, startIndex, endIndex);
         changeValue(subArray);
         Float[] shuffled = shuffleArray(subArray);
         Float maxValue = findMaxValue(shuffled);
