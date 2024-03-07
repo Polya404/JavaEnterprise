@@ -7,8 +7,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Bar {
     private final BlockingQueue<String> orders = new ArrayBlockingQueue<>(10);
     private final CopyOnWriteArrayList<String> readyOrders = new CopyOnWriteArrayList<>();
-    private final int bartender = 2;
-    private final int clients = 7;
+    private final int bartender;
+    private final int clients;
+
+    public Bar(int bartender, int clients) {
+        this.bartender = bartender;
+        this.clients = clients;
+    }
 
     public BlockingQueue<String> getOrders() {
         return orders;
