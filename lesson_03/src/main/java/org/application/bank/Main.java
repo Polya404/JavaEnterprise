@@ -3,6 +3,7 @@ package org.application.bank;
 public class Main {
     static void transfer(Account account1, Account account2, int amount) throws InterruptedException {
         if (account1.getBalance() < amount) {
+            account1.getFailedTransactionCount().addAndGet(1);
             throw new RuntimeException("Can't be sent");
         }
         System.out.println("Trying to lock account " + account1);

@@ -1,10 +1,16 @@
 package org.application.bank;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Account {
-    private ReentrantLock lock = new ReentrantLock();
+    private final ReentrantLock lock = new ReentrantLock();
     private int balance;
+    private final AtomicInteger failedTransactionCount = new AtomicInteger();
+
+    public AtomicInteger getFailedTransactionCount() {
+        return failedTransactionCount;
+    }
 
     public Account(int balance) {
         this.balance = balance;
