@@ -8,7 +8,7 @@
     </parent>
 
     <groupId>org.application</groupId>
-    <artifactId>lesson_03</artifactId>
+    <artifactId>lesson_03_04_multithreading_1_2</artifactId>
     <packaging>jar</packaging>
 
     <name>lesson_03</name>

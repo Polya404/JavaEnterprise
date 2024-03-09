@@ -9,8 +9,8 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>lesson_03</module>
-        <module>homework_03</module>
+        <module>lesson_03_04_multithreading_1_2</module>
+        <module>homework_multithreading_1</module>
         <module>homework_multithreading_2</module>
     </modules>
 
