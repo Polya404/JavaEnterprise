@@ -8,8 +8,8 @@ import java.util.concurrent.Future;
 public class App {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        int numClients = 4;
-        Bar bar = new Bar(4, numClients);
+        int numClients = 7;
+        Bar bar = new Bar(3, numClients);
 
         List<Future<String>> drinkFutures = new ArrayList<>();
         for (int i = 0; i < numClients; i++) {
