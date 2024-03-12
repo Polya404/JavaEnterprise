@@ -7,19 +7,17 @@ import java.util.concurrent.*;
 public class Bar {
     private final ExecutorService clientExecutor;
     private final ExecutorService bartenderExecutor;
-    ThreadFactory bartenderFactory = new ThreadFactoryBuilder().setNameFormat("Bartender-%d").build();
-    ThreadFactory clientFactory = new ThreadFactoryBuilder().setNameFormat("Client-%d").build();
 
     public Bar(int bartender, int clients) {
-        this.clientExecutor = Executors.newFixedThreadPool(clients, clientFactory);
-        this.bartenderExecutor = Executors.newFixedThreadPool(bartender, bartenderFactory);
+        this.clientExecutor = createExecutorService(clients, createThreadFactory("Client-%d"));
+        this.bartenderExecutor = createExecutorService(bartender, createThreadFactory("Bartender-%d"));
     }
 
     public Future<String> acceptOrder() {
         return clientExecutor.submit(new Client());
     }
 
-    public Future<String> preparationDrinks(String drink) {
+    private Future<String> preparationDrinks(String drink) {
         Bartender bartender = new Bartender(drink);
         return bartenderExecutor.submit(bartender);
     }
@@ -31,6 +29,14 @@ public class Bar {
     public void shutdown() {
         clientExecutor.shutdown();
         bartenderExecutor.shutdown();
+    }
+
+    private ExecutorService createExecutorService(int numOfThreads, ThreadFactory threadFactory) {
+        return Executors.newFixedThreadPool(numOfThreads, threadFactory);
+    }
+
+    private ThreadFactory createThreadFactory(String name) {
+        return new ThreadFactoryBuilder().setNameFormat(name).build();
     }
 }
 

@@ -2,26 +2,28 @@ package org.application;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.Objects;
+import java.util.concurrent.*;
 
 public class App {
-
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        int numClients = 7;
-        Bar bar = new Bar(3, numClients);
+        int clients = 7000;
+        int bartender = 7;
+        Bar bar = null;
+        try {
+            bar = new Bar(bartender, clients);
+            List<Future<String>> drinkFutures = new ArrayList<>();
+            for (int i = 0; i < clients; i++) {
+                Future<String> orderFuture = bar.acceptOrder();
+                drinkFutures.add(orderFuture);
+            }
 
-        List<Future<String>> drinkFutures = new ArrayList<>();
-        for (int i = 0; i < numClients; i++) {
-            Future<String> orderFuture = bar.acceptOrder();
-            drinkFutures.add(orderFuture);
+            for (Future<String> orderFuture : drinkFutures) {
+                bar.delivery(orderFuture.get());
+            }
+        } finally {
+            Objects.requireNonNull(bar).shutdown();
         }
-
-        for (Future<String> orderFuture : drinkFutures) {
-            bar.delivery(orderFuture.get());
-        }
-
-        bar.shutdown();
     }
 }
 
