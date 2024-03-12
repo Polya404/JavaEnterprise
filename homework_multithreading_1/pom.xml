@@ -8,10 +8,10 @@
     </parent>
 
     <groupId>org.application</groupId>
-    <artifactId>lesson_03</artifactId>
+    <artifactId>homework_multithreading_1</artifactId>
     <packaging>jar</packaging>
 
-    <name>lesson_03</name>
+    <name>homework_multithreading_1</name>
     <url>http://maven.apache.org</url>
 
     <properties>

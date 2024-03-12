@@ -11,8 +11,6 @@
     <modules>
         <module>lesson_05_multithreading_3</module>
         <module>homework_multithreading_3</module>
-        <module>lesson_03_04_multithreading_1_2</module>
-        <module>homework_multithreading_1</module>
         <module>homework_multithreading_2</module>
     </modules>
 
