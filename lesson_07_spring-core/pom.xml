@@ -11,7 +11,7 @@
     <groupId>org.application</groupId>
     <artifactId>lesson_07_spring-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-core</name>
+    <name>lesson_07_spring-core</name>
     <description>spring-core</description>
     <properties>
         <java.version>17</java.version>
