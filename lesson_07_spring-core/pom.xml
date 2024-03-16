@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.application</groupId>
-    <artifactId>spring-core</artifactId>
+    <artifactId>lesson_07_spring-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-core</name>
     <description>spring-core</description>
