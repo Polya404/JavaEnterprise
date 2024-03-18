@@ -40,7 +40,7 @@ public class TaskService {
 
 
     public <T extends Comparable<? super T>> Queue<Task> getOrderedTask(String fieldName) {
-        Function<Task, T> getter = getGetter(fieldName);
+        Function<Task, T> getter = invokeGetterByField(fieldName);
         Comparator<Task> priorityComparator = (task1, task2) -> {
             T value1 = getter.apply(task1);
             T  value2 = getter.apply(task2);
@@ -52,7 +52,8 @@ public class TaskService {
     }
 
     @SneakyThrows
-    private <T> Function<Task, T> getGetter(String fieldName) {
+    @SuppressWarnings("unchecked")
+    private <T> Function<Task, T> invokeGetterByField(String fieldName) {
         PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(Task.class).getPropertyDescriptors();
         Method getter = Arrays.stream(propertyDescriptors)
                 .filter(propertyDescriptor -> propertyDescriptor.getName().equals(fieldName))
