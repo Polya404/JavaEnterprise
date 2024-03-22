@@ -12,6 +12,7 @@
         <module>lesson_05_multithreading_3</module>
         <module>homework_multithreading_3</module>
         <module>homework_multithreading_2</module>
+        <module>homework_spring-mvc</module>
     </modules>
 
     <properties>
