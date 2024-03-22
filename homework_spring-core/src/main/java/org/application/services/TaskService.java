@@ -29,9 +29,14 @@ public class TaskService {
         return tasks.put(task.getId(), build);
     }
 
-    public void changeStatusOfTask(Integer taskId, Status status) {
+    public void deleteTaskById(Integer id) {
+        tasks.remove(id);
+    }
+
+    public Status changeStatusOfTask(Integer taskId, Status status) {
         Task task = tasks.get(taskId);
         task.setStatus(status);
+        return task.getStatus();
     }
 
     public Task getTaskById(Integer idTask) {
@@ -43,7 +48,7 @@ public class TaskService {
         Function<Task, T> getter = invokeGetterByField(fieldName);
         Comparator<Task> priorityComparator = (task1, task2) -> {
             T value1 = getter.apply(task1);
-            T  value2 = getter.apply(task2);
+            T value2 = getter.apply(task2);
             return value1.compareTo(value2);
         };
         PriorityQueue<Task> queue = new PriorityQueue<>(priorityComparator);

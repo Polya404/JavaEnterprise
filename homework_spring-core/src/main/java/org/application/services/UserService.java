@@ -51,6 +51,10 @@ public class UserService {
         return user;
     }
 
+    public Map<Integer, User> getAllUsers() {
+        return users;
+    }
+
     private void updateUser(User user) {
         users.put(user.getId(), user);
     }
