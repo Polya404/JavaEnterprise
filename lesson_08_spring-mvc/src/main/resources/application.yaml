@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: lesson_08_spring-mvc
