@@ -3,13 +3,11 @@ package org.application.models;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 
 @Builder
 @Data
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class Task implements Comparable<Task> {
     private final int id;
