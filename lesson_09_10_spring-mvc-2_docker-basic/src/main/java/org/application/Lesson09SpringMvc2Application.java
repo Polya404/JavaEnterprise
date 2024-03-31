@@ -11,7 +11,7 @@ public class Lesson09SpringMvc2Application {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(Lesson09SpringMvc2Application.class, args);
 		RestClient restClient = context.getBean(RestClient.class);
-		restClient.callMethod();
+//		restClient.callMethod();
 	}
 
 }

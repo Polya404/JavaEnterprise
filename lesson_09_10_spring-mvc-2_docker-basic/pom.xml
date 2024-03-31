@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.application</groupId>
-	<artifactId>lesson_09_spring-mvc-2</artifactId>
+	<artifactId>lesson_09_10_spring-mvc-2_docker-basic</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>lesson_09_spring-mvc-2</name>
+	<name>lesson_09_spring-mvc-2_docker-basic</name>
 	<description>lesson_09_spring-mvc-2</description>
 	<properties>
 		<java.version>21</java.version>
@@ -32,12 +32,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.application</groupId>
-            <artifactId>lesson_08_spring-mvc</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.application</groupId>-->
+<!--            <artifactId>lesson_08_spring-mvc</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
 	<build>
