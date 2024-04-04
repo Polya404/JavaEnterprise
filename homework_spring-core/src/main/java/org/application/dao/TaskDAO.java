@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
@@ -88,7 +86,7 @@ public class TaskDAO {
             if (resultSet.next()) {
                 return Utils.extractTaskFromResultSet(resultSet);
             }
-            return null;
+            throw new IllegalArgumentException();
         }
     }
 

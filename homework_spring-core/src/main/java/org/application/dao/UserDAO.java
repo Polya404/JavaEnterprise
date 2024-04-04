@@ -100,7 +100,7 @@ public class UserDAO {
             if (resultSet.next()) {
                 return extractUserFromResultSet(resultSet);
             }
-            return null;
+            throw new IllegalArgumentException();
         }
     }
 

@@ -7,9 +7,7 @@ import org.application.models.Task;
 import org.application.models.User;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,7 +18,9 @@ public class UserService {
     private final UserDAO userDAO;
 
     public User createUser(User user) {
-        return userDAO.saveUser(user) == 1 ? user : null;
+        if (userDAO.saveUser(user) == 1) {
+            return user;
+        } else throw new IllegalArgumentException();
     }
 
     public void deleteUser(int userId) {

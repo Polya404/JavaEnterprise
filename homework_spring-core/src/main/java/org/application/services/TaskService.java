@@ -2,17 +2,12 @@ package org.application.services;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.application.dao.TaskDAO;
 import org.application.models.Status;
 import org.application.models.Task;
 import org.springframework.stereotype.Service;
 
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Function;
 
 @Service
 @Getter
@@ -22,7 +17,9 @@ public class TaskService {
     private final TaskDAO taskDAO;
 
     public Task createNewTask(Task task) {
-        return taskDAO.saveTask(task) == 1 ? task : null;
+        if (taskDAO.saveTask(task) == 1) {
+            return task;
+        } else throw new IllegalArgumentException();
     }
 
     public void deleteTaskById(Integer id) {
