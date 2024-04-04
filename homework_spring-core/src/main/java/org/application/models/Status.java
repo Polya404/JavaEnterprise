@@ -2,8 +2,6 @@ package org.application.models;
 
 import lombok.Getter;
 
-import java.util.Comparator;
-
 @Getter
 public enum Status {
     TO_DO(0), IN_PROGRESS(1), DONE(2), BLOCKED(3);
