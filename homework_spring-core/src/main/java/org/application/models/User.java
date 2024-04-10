@@ -16,6 +16,9 @@ public class User {
     private String fullName;
 
     public void addTasks(List<Task> tasks) {
+        if (tasksId == null) {
+            tasksId = new ArrayList<>();
+        }
         for (Task task : tasks) {
             tasksId.add(task.getId());
         }

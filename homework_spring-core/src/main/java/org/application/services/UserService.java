@@ -8,6 +8,7 @@ import org.application.models.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,9 +19,30 @@ public class UserService {
     private final UserDAO userDAO;
 
     public User createUser(User user) {
-        if (userDAO.saveUser(user) == 1) {
-            return user;
-        } else throw new IllegalArgumentException();
+        int savedUser = 0;
+        if (user.getTasksId() != null && !user.getTasksId().isEmpty()) {
+            List<Integer> tasksId = user.getTasksId();
+            savedUser = getSavedUser(user, tasksId, savedUser);
+        } else {
+            savedUser = userDAO.saveUser(user);
+        }
+        if (savedUser != 1) {
+            throw new IllegalArgumentException("Failed to save user");
+        }
+        return user;
+    }
+
+    private int getSavedUser(User user, List<Integer> tasksId, int savedUser) {
+        for (Integer id : tasksId) {
+            Task task = taskService.getTaskById(id);
+            if (task == null) {
+                throw new IllegalArgumentException("Task doesn't exist. Please create task before setting it for the user");
+            }
+            task.setUserId(user.getId());
+            savedUser = userDAO.saveUser(user);
+            taskService.updateTask(task);
+        }
+        return savedUser;
     }
 
     public void deleteUser(int userId) {
@@ -35,8 +57,10 @@ public class UserService {
         return userDAO.getUserForCurrentTask(taskId);
     }
 
-    public User setTaskForUser(Task task, User user) {
-        task.setUserId(user.getId());
+    public User setTaskForUser(Integer taskId, Integer userId) {
+        Task task = taskService.getTaskById(taskId);
+        task.setUserId(userId);
+        User user = userDAO.getUserById(userId);
         user.addTasks(List.of(task));
         taskService.updateTask(task);
         return user;

@@ -42,13 +42,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/get")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.of(Optional.ofNullable(userService.getAllUsers()));
     }
 
-    @PostMapping("/setTask")
-    public ResponseEntity<User> setTask(@RequestBody Task task, @RequestBody User user) {
-        return ResponseEntity.ok(userService.setTaskForUser(task, user));
+    @PostMapping("/setTask/{taskId}")
+    public ResponseEntity<User> setTask(@PathVariable Integer taskId, @RequestBody Integer userId) {
+        return ResponseEntity.ok(userService.setTaskForUser(taskId, userId));
     }
 }

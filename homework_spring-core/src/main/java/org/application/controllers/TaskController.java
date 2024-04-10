@@ -20,7 +20,7 @@ public class TaskController {
         return ResponseEntity.ok(taskService.createNewTask(task));
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/get")
     public List<Task> getTasks() {
         return taskService.getTasks();
     }
@@ -35,8 +35,8 @@ public class TaskController {
         return ResponseEntity.ok(taskService.changeStatusOfTask(taskId, status));
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<Task> getTaskById(@RequestBody Integer id) {
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Integer id) {
         return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
