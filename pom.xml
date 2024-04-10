@@ -8,13 +8,13 @@
     <artifactId>JavaEnterprise</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <modules>
-        <module>lesson_05_multithreading_3</module>
-        <module>homework_multithreading_3</module>
-        <module>homework_multithreading_2</module>
-        <module>homework_spring-mvc</module>
-        <module>homework_spring-core</module>
-    </modules>
+<!--    <modules>-->
+<!--        <module>lesson_05_multithreading_3</module>-->
+<!--        <module>homework_multithreading_3</module>-->
+<!--        <module>homework_multithreading_2</module>-->
+<!--        <module>homework_spring-mvc</module>-->
+<!--        <module>homework_spring-core</module>-->
+<!--    </modules>-->
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

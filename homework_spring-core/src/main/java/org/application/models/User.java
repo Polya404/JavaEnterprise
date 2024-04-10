@@ -1,5 +1,6 @@
 package org.application.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -8,12 +9,18 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Data
+@AllArgsConstructor
 public class User {
-    private final int id;
+    private final Integer id;
     private List<Integer> tasksId = new ArrayList<>();
     private String fullName;
 
-    public void addTask(int id){
-        tasksId.add(id);
+    public void addTasks(List<Task> tasks) {
+        if (tasksId == null) {
+            tasksId = new ArrayList<>();
+        }
+        for (Task task : tasks) {
+            tasksId.add(task.getId());
+        }
     }
 }

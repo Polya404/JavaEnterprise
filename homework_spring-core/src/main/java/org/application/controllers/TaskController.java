@@ -7,7 +7,7 @@ import org.application.services.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Queue;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,27 +16,32 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping("/create")
-    public ResponseEntity<Task> createTask(Task task) {
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
         return ResponseEntity.ok(taskService.createNewTask(task));
     }
 
-    @DeleteMapping("/delete")
-    public void deleteTask(Integer id){
+    @GetMapping("/get")
+    public List<Task> getTasks() {
+        return taskService.getTasks();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteTask(@PathVariable Integer id) {
         taskService.deleteTaskById(id);
     }
 
-    @PutMapping("/changeStatus/{taskId}")
-    public ResponseEntity<Status> changeStatus(@PathVariable Integer taskId, Status status) {
+    @PutMapping("/changeStatus/{taskId}/{status}")
+    public ResponseEntity<Status> changeStatus(@PathVariable Integer taskId, @PathVariable Status status) {
         return ResponseEntity.ok(taskService.changeStatusOfTask(taskId, status));
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<Task> getTaskById(Integer id) {
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Integer id) {
         return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
-    @GetMapping("/get/ordered")
-    public ResponseEntity<Queue<Task>> getOrderedTasks(String orderBy) {
+    @GetMapping("/get/ordered/{orderBy}")
+    public ResponseEntity<List<Task>> getOrderedTasks(@PathVariable String orderBy) {
         return ResponseEntity.ok(taskService.getOrderedTask(orderBy));
     }
 }

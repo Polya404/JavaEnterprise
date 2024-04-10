@@ -1,81 +1,52 @@
 package org.application.services;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
+import lombok.RequiredArgsConstructor;
+import org.application.dao.TaskDAO;
 import org.application.models.Status;
 import org.application.models.Task;
 import org.springframework.stereotype.Service;
 
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Function;
 
 @Service
 @Getter
+@RequiredArgsConstructor
 public class TaskService {
     private final Map<Integer, Task> tasks = new HashMap<>();
+    private final TaskDAO taskDAO;
 
     public Task createNewTask(Task task) {
-        Task build = Task.builder()
-                .id(task.getId())
-                .name(task.getName())
-                .description(task.getDescription())
-                .deadline(task.getDeadline())
-                .status(task.getStatus())
-                .priority(task.getPriority())
-                .build();
-        return tasks.put(task.getId(), build);
+        if (taskDAO.saveTask(task) == 1) {
+            return task;
+        } else throw new IllegalArgumentException();
     }
 
     public void deleteTaskById(Integer id) {
-        tasks.remove(id);
+        taskDAO.deleteTask(id);
     }
 
     public Status changeStatusOfTask(Integer taskId, Status status) {
-        Task task = tasks.get(taskId);
+        Task task = taskDAO.getTaskById(taskId);
         task.setStatus(status);
+        taskDAO.updateTaskStatus(task);
         return task.getStatus();
     }
 
+    public Task updateTask(Task task) {
+        return taskDAO.updateTask(task);
+    }
+
     public Task getTaskById(Integer idTask) {
-        return tasks.get(idTask);
+        return taskDAO.getTaskById(idTask);
     }
 
 
-    public <T extends Comparable<? super T>> Queue<Task> getOrderedTask(String fieldName) {
-        Function<Task, T> getter = invokeGetterByField(fieldName);
-        Comparator<Task> priorityComparator = (task1, task2) -> {
-            T value1 = getter.apply(task1);
-            T value2 = getter.apply(task2);
-            return value1.compareTo(value2);
-        };
-        PriorityQueue<Task> queue = new PriorityQueue<>(priorityComparator);
-        queue.addAll(tasks.values());
-        return queue;
+    public List<Task> getOrderedTask(String fieldName) {
+        return taskDAO.getAllTasks(fieldName);
     }
 
-    @SneakyThrows
-    @SuppressWarnings("unchecked")
-    private <T> Function<Task, T> invokeGetterByField(String fieldName) {
-        PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(Task.class).getPropertyDescriptors();
-        Method getter = Arrays.stream(propertyDescriptors)
-                .filter(propertyDescriptor -> propertyDescriptor.getName().equals(fieldName))
-                .findFirst()
-                .map(PropertyDescriptor::getReadMethod)
-                .orElse(null);
-
-        if (getter != null) {
-            return task -> {
-                try {
-                    return (T) getter.invoke(task);
-                } catch (Exception e) {
-                    return null;
-                }
-            };
-        } else {
-            throw new NoSuchMethodException("Getter not found for field: " + fieldName);
-        }
+    public List<Task> getTasks() {
+        return taskDAO.getAllTasks();
     }
 }

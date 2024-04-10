@@ -18,12 +18,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
-    @DeleteMapping("/delete")
-    public void deleteUser(Integer id) {
+    @DeleteMapping("/delete/{id}")
+    public void deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
     }
 
@@ -37,18 +37,18 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserForCurrentTask(taskId));
     }
 
-    @GetMapping("/getById")
-    public ResponseEntity<User> getUserById(Integer id) {
+    @GetMapping("/get/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<Map<Integer, User>> getUsers() {
+    @GetMapping("/get")
+    public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.of(Optional.ofNullable(userService.getAllUsers()));
     }
 
-    @PostMapping("/setTask")
-    public ResponseEntity<User> setTask(Task task, User user) {
-        return ResponseEntity.ok(userService.setTaskForUser(task, user));
+    @PostMapping("/setTask/{taskId}")
+    public ResponseEntity<User> setTask(@PathVariable Integer taskId, @RequestBody Integer userId) {
+        return ResponseEntity.ok(userService.setTaskForUser(taskId, userId));
     }
 }
