@@ -40,6 +40,11 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
+    @GetMapping("/getTasks/{userId}")
+    public ResponseEntity<List<Task>> getTasksByUserId(@PathVariable Integer userId) {
+        return ResponseEntity.ok(taskService.getTasksByUserId(userId));
+    }
+
     @GetMapping("/get/ordered/{orderBy}")
     public ResponseEntity<List<Task>> getOrderedTasks(@PathVariable String orderBy) {
         return ResponseEntity.ok(taskService.getOrderedTask(orderBy));

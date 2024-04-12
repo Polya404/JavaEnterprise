@@ -3,6 +3,7 @@ package org.application.dao;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.application.models.Task;
+import org.application.interfaces.TaskInterface;
 import org.application.util.DBConnect;
 import org.springframework.stereotype.Component;
 
@@ -12,21 +13,25 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class TaskDAO {
+public class TaskDAO  implements TaskInterface {
     private final DBConnect dbConnect;
 
     @SneakyThrows
-    public int saveTask(Task task) {
+    public Task saveTask(Task task) {
         if (task.getUserId() == null) {
             PreparedStatement statement = dbConnect.connect().prepareStatement(
                     "INSERT INTO tasks (id, name, status, description, deadline, priority) VALUES (?,?,?,?,?,?);"
             );
-            return saveTaskWithoutUserId(task, statement);
+            if (saveTaskWithoutUserId(task, statement) == 1) {
+                return task;
+            } else throw new IllegalArgumentException();
         } else {
             PreparedStatement statement = dbConnect.connect().prepareStatement(
                     "INSERT INTO tasks (id, user_id, name, status, description, deadline, priority) VALUES (?,?,?,?,?,?,?);"
             );
-            return saveTaskWithUserId(task, statement);
+            if (saveTaskWithUserId(task, statement) == 1) {
+                return task;
+            } else throw new IllegalArgumentException();
         }
     }
 
@@ -56,7 +61,7 @@ public class TaskDAO {
     }
 
     @SneakyThrows
-    public void deleteTask(int taskId) {
+    public void deleteTaskById(Integer taskId) {
         try (PreparedStatement statement = dbConnect.connect().prepareStatement(
                 "DELETE FROM tasks WHERE id = ?"
         )) {
@@ -66,13 +71,13 @@ public class TaskDAO {
     }
 
     @SneakyThrows
-    public int updateTaskStatus(Task task) {
+    public void updateTaskStatus(Task task) {
         try (PreparedStatement statement = dbConnect.connect().prepareStatement(
                 "UPDATE tasks SET status = ? WHERE id = ?"
         )) {
             statement.setString(1, task.getStatus().name());
             statement.setInt(2, task.getId());
-            return statement.executeUpdate();
+            statement.executeUpdate();
         }
     }
 
@@ -108,6 +113,23 @@ public class TaskDAO {
         String sql = "SELECT * FROM tasks ORDER BY " + sortField;
         List<Task> tasks = new ArrayList<>();
         try (PreparedStatement statement = dbConnect.connect().prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Task task = Utils.extractTaskFromResultSet(resultSet);
+                tasks.add(task);
+            }
+        }
+        return tasks;
+    }
+
+
+    @SneakyThrows
+    public List<Task> getTasksByUserId(Integer userId) {
+        List<Task> tasks = new ArrayList<>();
+        try (PreparedStatement statement = dbConnect.connect().prepareStatement(
+                "SELECT * FROM tasks WHERE user_id = ?"
+        )) {
+            statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Task task = Utils.extractTaskFromResultSet(resultSet);

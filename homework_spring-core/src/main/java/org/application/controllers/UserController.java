@@ -1,14 +1,12 @@
 package org.application.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.application.models.Task;
 import org.application.models.User;
 import org.application.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -25,11 +23,6 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public void deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
-    }
-
-    @GetMapping("/getTasks/{userId}")
-    public ResponseEntity<List<Task>> getTasksByUserId(@PathVariable Integer userId) {
-        return ResponseEntity.ok(userService.getTasksByUserId(userId));
     }
 
     @GetMapping("/getUserByTaskId/{taskId}")
