@@ -9,12 +9,12 @@ import javax.sql.DataSource;
 @Configuration
 public class AppConfig {
     @Bean
-    public DataSource dbDataSource() {
+    public DataSource dbDataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//        dataSource.setDriverClassName();
-//        dataSource.setUrl();
-//        dataSource.setUsername();
-//        dataSource.setPassword();
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/hillel");
+        dataSource.setUsername("admin");
+        dataSource.setPassword("root");
         return dataSource;
     }
 }
