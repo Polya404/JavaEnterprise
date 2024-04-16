@@ -1,30 +1,24 @@
 package org.application.dao;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.application.models.Task;
 import org.application.models.User;
-import org.application.interfaces.TaskInterface;
 import org.application.interfaces.UserInterface;
+import org.application.services.TaskService;
 import org.application.util.DBConnect;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
+@ConditionalOnProperty(value = "user.useRepository", havingValue = "false")
 public class UserDAO implements UserInterface {
     private final DBConnect dbConnect;
-    private final TaskInterface taskInterface;
-
-    public UserDAO(@Value("${task.useRepository}") boolean useRepository,
-                   @Qualifier("taskJpa") TaskInterface jpaTaskRepository,
-                   @Qualifier("taskDAO") TaskInterface taskDAO, DBConnect dbConnect) {
-        this.taskInterface = useRepository ? jpaTaskRepository : taskDAO;
-        this.dbConnect = dbConnect;
-    }
+    private final TaskService taskService;
 
     @SneakyThrows
     public User saveUser(User user) {
@@ -47,13 +41,13 @@ public class UserDAO implements UserInterface {
 
     private void saveUser(User user, List<Integer> tasksId) {
         for (Integer id : tasksId) {
-            Task task = taskInterface.getTaskById(id);
+            Task task = taskService.getTaskById(id);
             if (task == null) {
                 throw new IllegalArgumentException("Task doesn't exist. Please create task before setting it for the user");
             }
             task.setUserId(user.getId());
             saveUser(user);
-            taskInterface.updateTask(task);
+            taskService.updateTask(task);
         }
     }
 
@@ -93,7 +87,7 @@ public class UserDAO implements UserInterface {
         }
         List<User> userList = new ArrayList<>(users.values());
         userList.forEach(user -> {
-            List<Task> tasks = taskInterface.getTasksByUserId(user.getId());
+            List<Task> tasks = taskService.getTasksByUserId(user.getId());
             if (tasks != null) {
                 user.addTasks(tasks);
             }

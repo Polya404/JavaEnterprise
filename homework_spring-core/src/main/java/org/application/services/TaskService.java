@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.application.interfaces.TaskInterface;
 import org.application.models.Status;
 import org.application.models.Task;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 @RequiredArgsConstructor
 public class TaskService {
 

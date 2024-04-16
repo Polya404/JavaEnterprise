@@ -5,18 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.application.interfaces.UserInterface;
 import org.application.models.Task;
 import org.application.models.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class UserService {
     private final TaskService taskService;
     private final UserInterface userInterface;
-
-    public UserService(UserInterface userInterface, TaskService taskService) {
-        this.userInterface = userInterface;
-        this.taskService = taskService;
-    }
 
     public User createUser(User user) {
         return userInterface.saveUser(user);

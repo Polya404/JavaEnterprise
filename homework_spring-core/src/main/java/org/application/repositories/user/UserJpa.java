@@ -3,12 +3,14 @@ package org.application.repositories.user;
 import lombok.RequiredArgsConstructor;
 import org.application.models.User;
 import org.application.interfaces.UserInterface;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Component
+@ConditionalOnProperty(value = "user.useRepository", havingValue = "true")
 public class UserJpa implements UserInterface {
 
     private final UserRepository repository;

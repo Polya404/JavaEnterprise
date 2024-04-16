@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.application.models.Task;
 import org.application.interfaces.TaskInterface;
 import org.application.util.DBConnect;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
+@ConditionalOnProperty(value = "task.useRepository", havingValue = "false")
 public class TaskDAO  implements TaskInterface {
     private final DBConnect dbConnect;
 

@@ -3,12 +3,14 @@ package org.application.repositories.task;
 import lombok.RequiredArgsConstructor;
 import org.application.models.Task;
 import org.application.interfaces.TaskInterface;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Component
+@ConditionalOnProperty(value = "task.useRepository", havingValue = "true")
 public class TaskJpa implements TaskInterface {
     private final TaskRepository repository;
 
