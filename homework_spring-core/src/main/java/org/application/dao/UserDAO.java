@@ -4,25 +4,50 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.application.models.Task;
 import org.application.models.User;
+import org.application.interfaces.UserInterface;
+import org.application.services.TaskService;
 import org.application.util.DBConnect;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.*;
 
-@RequiredArgsConstructor
 @Component
-public class UserDAO {
+@RequiredArgsConstructor
+@ConditionalOnProperty(value = "user.useRepository", havingValue = "false")
+public class UserDAO implements UserInterface {
     private final DBConnect dbConnect;
+    private final TaskService taskService;
 
     @SneakyThrows
-    public int saveUser(User user) {
+    public User saveUser(User user) {
         try (PreparedStatement statement = dbConnect.connect().prepareStatement(
                 "INSERT INTO users (id, full_name) VALUES (?, ?);"
         )) {
            statement.setInt(1, user.getId());
            statement.setString(2, user.getFullName());
-           return statement.executeUpdate();
+            int savedUser = statement.executeUpdate();
+            if (user.getTasksId() != null && !user.getTasksId().isEmpty()) {
+                List<Integer> tasksId = user.getTasksId();
+                saveUser(user, tasksId);
+            }
+            if (savedUser != 1) {
+                throw new IllegalArgumentException("Failed to save user");
+            }
+            return user;
+        }
+    }
+
+    private void saveUser(User user, List<Integer> tasksId) {
+        for (Integer id : tasksId) {
+            Task task = taskService.getTaskById(id);
+            if (task == null) {
+                throw new IllegalArgumentException("Task doesn't exist. Please create task before setting it for the user");
+            }
+            task.setUserId(user.getId());
+            saveUser(user);
+            taskService.updateTask(task);
         }
     }
 
@@ -34,22 +59,6 @@ public class UserDAO {
             statement.setInt(1, userId);
             statement.executeUpdate();
         }
-    }
-
-    @SneakyThrows
-    public List<Task> getTasksByUserId(int userId) {
-        List<Task> tasks = new ArrayList<>();
-        try (PreparedStatement statement = dbConnect.connect().prepareStatement(
-                "SELECT * FROM tasks WHERE user_id = ?"
-        )) {
-            statement.setInt(1, userId);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Task task = Utils.extractTaskFromResultSet(resultSet);
-                tasks.add(task);
-            }
-        }
-        return tasks;
     }
 
     @SneakyThrows
@@ -67,19 +76,7 @@ public class UserDAO {
     }
 
     @SneakyThrows
-    public User updateUser(User user) {
-        try (PreparedStatement statement = dbConnect.connect().prepareStatement(
-                "UPDATE users SET full_name = ? WHERE id = ?"
-        )) {
-            statement.setString(1, user.getFullName());
-            statement.setInt(2, user.getId());
-            statement.executeUpdate();
-            return user;
-        }
-    }
-
-    @SneakyThrows
-    public Map<Integer, User> getUsers() {
+    public List<User> getAllUsers() {
         Map<Integer, User> users = new HashMap<>();
         try (Statement statement = dbConnect.connect().createStatement()) {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
@@ -88,7 +85,14 @@ public class UserDAO {
                 users.put(user.getId(), user);
             }
         }
-        return users;
+        List<User> userList = new ArrayList<>(users.values());
+        userList.forEach(user -> {
+            List<Task> tasks = taskService.getTasksByUserId(user.getId());
+            if (tasks != null) {
+                user.addTasks(tasks);
+            }
+        });
+        return userList;
     }
     @SneakyThrows
     public User getUserById(int userId) {
@@ -108,8 +112,6 @@ public class UserDAO {
     private User extractUserFromResultSet(ResultSet resultSet) {
         int id = resultSet.getInt("id");
         String fullName = resultSet.getString("full_name");
-        User user = new User(id);
-        user.setFullName(fullName);
-        return user;
+        return new User(id, fullName);
     }
 }
