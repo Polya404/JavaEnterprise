@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void setRole(User user) {
-        Long unverifiedRoleId = roleService.findRoleByName(Roles.ROLE_USER.name()).getId();
+        Long unverifiedRoleId = roleService.findRoleByName(Roles.ROLE_USER.name().toUpperCase(Locale.ROOT)).getId();
         roleService.addRoleToUser(user.getId(), unverifiedRoleId);
     }
 

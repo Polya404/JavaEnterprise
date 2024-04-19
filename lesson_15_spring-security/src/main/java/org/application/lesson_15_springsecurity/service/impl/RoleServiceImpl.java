@@ -29,4 +29,14 @@ public class RoleServiceImpl implements RoleService {
         roles.add(roleRepository.findById(roleId).orElseThrow());
         userRepository.save(user);
     }
+
+    @Override
+    public List<Role> getRoleByUserId(long userid) {
+        return roleRepository.findUserRolesByUserId(userid);
+    }
+
+    @Override
+    public List<Role> getAllExistRoles() {
+        return roleRepository.findAll();
+    }
 }

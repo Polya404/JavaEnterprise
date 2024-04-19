@@ -40,4 +40,14 @@ public class UserController {
         roleService.addRoleToUser(userId, role.getId());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/getRole/{userId}")
+    public ResponseEntity<List<Role>> getUserRoles(@PathVariable final Long userId) {
+        return ResponseEntity.ok(roleService.getRoleByUserId(userId));
+    }
+
+    @GetMapping("/getRole")
+    public ResponseEntity<List<Role>> getRoles() {
+        return ResponseEntity.ok(roleService.getAllExistRoles());
+    }
 }

@@ -34,6 +34,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/home").permitAll()
                                 .requestMatchers("/register/**").permitAll()
                                 .requestMatchers("/api/v1/users/get").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/api/v1/users/getRole/**").hasRole( "ADMIN")
                                 .requestMatchers("/api/**").hasRole("ADMIN")
                 ).formLogin(
                         form -> form
