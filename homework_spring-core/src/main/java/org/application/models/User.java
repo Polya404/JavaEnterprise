@@ -1,24 +1,30 @@
 package org.application.models;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@Data
+@Getter
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
-public class User {
+@AllArgsConstructor(onConstructor_ = {@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)})
+@Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ElementCollection
-    private List<Integer> tasksId;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Task> tasksId;
     private String fullName;
 
     public User(Integer id, String fullName) {
@@ -27,12 +33,13 @@ public class User {
         this.tasksId = new ArrayList<>();
     }
 
+    public User() {
+    }
+
     public void addTasks(List<Task> tasks) {
         if (tasksId == null) {
             tasksId = new ArrayList<>();
         }
-        for (Task task : tasks) {
-            tasksId.add(task.getId());
-        }
+        tasksId.addAll(tasks);
     }
 }

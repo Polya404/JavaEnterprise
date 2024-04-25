@@ -2,6 +2,7 @@ package org.application.dao;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.application.annotation.Cacheable;
 import org.application.models.Task;
 import org.application.interfaces.TaskInterface;
 import org.application.util.DBConnect;
@@ -20,7 +21,7 @@ public class TaskDAO  implements TaskInterface {
 
     @SneakyThrows
     public Task saveTask(Task task) {
-        if (task.getUserId() == null) {
+        if (task.getUser().getId() == null) {
             PreparedStatement statement = dbConnect.connect().prepareStatement(
                     "INSERT INTO tasks (id, name, status, description, deadline, priority) VALUES (?,?,?,?,?,?);"
             );
@@ -40,7 +41,7 @@ public class TaskDAO  implements TaskInterface {
     private int saveTaskWithUserId(Task task, PreparedStatement statement) throws SQLException {
         try (statement) {
             statement.setInt(1, task.getId());
-            statement.setInt(2, task.getUserId());
+            statement.setInt(2, task.getUser().getId());
             statement.setString(3, task.getName());
             statement.setString(4, task.getStatus().name());
             statement.setString(5, task.getDescription());
@@ -145,7 +146,7 @@ public class TaskDAO  implements TaskInterface {
     public Task updateTask(Task task) {
         String sql = "UPDATE tasks SET user_id = ?, name = ?, status = ?, description = ?, deadline = ?, priority = ? WHERE id = ?";
         try (PreparedStatement statement = dbConnect.connect().prepareStatement(sql)) {
-            statement.setInt(1, task.getUserId());
+            statement.setInt(1, task.getUser().getId());
             statement.setString(2, task.getName());
             statement.setString(3, task.getStatus().name());
             statement.setString(4, task.getDescription());

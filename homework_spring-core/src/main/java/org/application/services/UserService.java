@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.application.interfaces.UserInterface;
 import org.application.models.Task;
 import org.application.models.User;
+import org.application.models.UserTasks;
+import org.application.repositories.UserTasksRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
 public class UserService {
     private final TaskService taskService;
     private final UserInterface userInterface;
+    private final UserTasksRepository userTasksRepository;
 
     public User createUser(User user) {
         return userInterface.saveUser(user);
@@ -28,11 +31,15 @@ public class UserService {
     }
 
     public User setTaskForUser(Integer taskId, Integer userId) {
-        Task task = taskService.getTaskById(taskId);
-        task.setUserId(userId);
         User user = userInterface.getUserById(userId);
-        user.addTasks(List.of(task));
-        taskService.updateTask(task);
+        Task task = taskService.getTaskById(taskId);
+        task.setUser(user);
+        userTasksRepository.save(UserTasks.builder()
+                .task(task)
+                .user(user)
+                .build());
+        List<Task> tasksByUserId = taskService.getTasksByUserId(userId);
+        user.addTasks(tasksByUserId);
         return user;
     }
 

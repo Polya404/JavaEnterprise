@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query("SELECT u FROM User u JOIN Task t ON u.id = t.userId WHERE t.id = :taskId")
+    @Query("SELECT u FROM User u JOIN Task t ON u.id = t.user.id WHERE t.id = :taskId")
     User findUserByTaskId(@Param("taskId") Integer taskId);
 }

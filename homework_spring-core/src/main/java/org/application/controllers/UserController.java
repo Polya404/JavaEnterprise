@@ -1,13 +1,13 @@
 package org.application.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.application.annotation.Cacheable;
 import org.application.models.User;
 import org.application.services.UserService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,32 +16,41 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    @ResponseStatus(HttpStatus.OK)
+    public User createUser(@RequestBody User user) {
+        return userService.createUser(user);
     }
 
     @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
     }
 
     @GetMapping("/getUserByTaskId/{taskId}")
-    public ResponseEntity<User> getUserForCurrentTask(@PathVariable Integer taskId) {
-        return ResponseEntity.ok(userService.getUserForCurrentTask(taskId));
+    @ResponseStatus(HttpStatus.OK)
+    @Cacheable(key = "userForCurrentTask")
+    public User getUserForCurrentTask(@PathVariable Integer taskId) {
+        return userService.getUserForCurrentTask(taskId);
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    @ResponseStatus(HttpStatus.OK)
+    @Cacheable(key = "getUserById")
+    public User getUserById(@PathVariable Integer id) {
+        return userService.getUserById(id);
     }
 
     @GetMapping("/get")
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.of(Optional.ofNullable(userService.getAllUsers()));
+    @ResponseStatus(HttpStatus.OK)
+    @Cacheable(key = "allUsers")
+    public List<User> getUsers() {
+        return userService.getAllUsers();
     }
 
     @PostMapping("/setTask/{taskId}")
-    public ResponseEntity<User> setTask(@PathVariable Integer taskId, @RequestBody Integer userId) {
-        return ResponseEntity.ok(userService.setTaskForUser(taskId, userId));
+    @ResponseStatus(HttpStatus.OK)
+    public User setTask(@PathVariable Integer taskId, @RequestBody Integer userId) {
+        return userService.setTaskForUser(taskId, userId);
     }
 }

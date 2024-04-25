@@ -37,7 +37,6 @@ public class TaskService {
         return taskInterface.getTaskById(idTask);
     }
 
-
     public List<Task> getOrderedTask(String fieldName) {
         return taskInterface.getAllTasks(fieldName);
     }

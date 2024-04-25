@@ -2,6 +2,7 @@ package org.application.dao;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.application.annotation.Cacheable;
 import org.application.models.Task;
 import org.application.models.User;
 import org.application.interfaces.UserInterface;
@@ -29,7 +30,7 @@ public class UserDAO implements UserInterface {
            statement.setString(2, user.getFullName());
             int savedUser = statement.executeUpdate();
             if (user.getTasksId() != null && !user.getTasksId().isEmpty()) {
-                List<Integer> tasksId = user.getTasksId();
+                List<Task> tasksId = user.getTasksId();
                 saveUser(user, tasksId);
             }
             if (savedUser != 1) {
@@ -39,13 +40,9 @@ public class UserDAO implements UserInterface {
         }
     }
 
-    private void saveUser(User user, List<Integer> tasksId) {
-        for (Integer id : tasksId) {
-            Task task = taskService.getTaskById(id);
-            if (task == null) {
-                throw new IllegalArgumentException("Task doesn't exist. Please create task before setting it for the user");
-            }
-            task.setUserId(user.getId());
+    private void saveUser(User user, List<Task> tasksId) {
+        for (Task task : tasksId) {
+            task.setUser(user);
             saveUser(user);
             taskService.updateTask(task);
         }
