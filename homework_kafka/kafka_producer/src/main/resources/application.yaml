@@ -1,0 +1,29 @@
+spring:
+  application:
+    name:
+      kafka_producer
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: user
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  kafka:
+    bootstrap-servers: 192.168.0.2:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+topic:
+  name:
+    producer: "topic"
+
+
+server:
+  port: 8080
