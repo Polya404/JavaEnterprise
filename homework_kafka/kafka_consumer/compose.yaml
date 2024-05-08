@@ -1,0 +1,18 @@
+networks:
+  consumer_kafka:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/20
+
+volumes:
+  volume1:
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_USER=user'
+      - 'POSTGRES_DB=postgres'
+      - 'POSTGRES_PASSWORD=secret'
+    ports:
+      - '5432:5432'
